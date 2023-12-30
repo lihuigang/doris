@@ -35,7 +35,6 @@ import org.junit.Test;
 import java.io.IOException;
 
 // hive bitmap udf test
-
 public class BitmapUDFTest {
 
     private byte[] bitmapValue0Bytes;
