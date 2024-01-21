@@ -39,6 +39,7 @@ import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayCumSum;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayDifference;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayDistinct;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayEnumerate;
+import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayEnumerateUniq;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayExcept;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayExists;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayFilter;
@@ -59,6 +60,7 @@ import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayRange;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayRemove;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayRepeat;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayReverseSort;
+import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayShuffle;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArraySlice;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArraySort;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArraySortBy;
@@ -191,11 +193,14 @@ import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv4NumToStri
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv4StringToNum;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv4StringToNumOrDefault;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv4StringToNumOrNull;
+import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv6CIDRToRange;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv6NumToString;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv6StringToNum;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv6StringToNumOrDefault;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv6StringToNumOrNull;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.IsIpAddressInRange;
+import org.apache.doris.nereids.trees.expressions.functions.scalar.IsIpv4Compat;
+import org.apache.doris.nereids.trees.expressions.functions.scalar.IsIpv4Mapped;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.IsIpv4String;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.IsIpv6String;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.JsonArray;
@@ -484,6 +489,10 @@ public interface ScalarFunctionVisitor<R, C> {
         return visitScalarFunction(arrayEnumerate, context);
     }
 
+    default R visitArrayEnumerateUniq(ArrayEnumerateUniq arrayEnumerateUniq, C context) {
+        return visitScalarFunction(arrayEnumerateUniq, context);
+    }
+
     default R visitArrayExcept(ArrayExcept arrayExcept, C context) {
         return visitScalarFunction(arrayExcept, context);
     }
@@ -562,6 +571,10 @@ public interface ScalarFunctionVisitor<R, C> {
 
     default R visitArraySortBy(ArraySortBy arraySortBy, C context) {
         return visitScalarFunction(arraySortBy, context);
+    }
+
+    default R visitArrayShuffle(ArrayShuffle arrayShuffle, C context) {
+        return visitScalarFunction(arrayShuffle, context);
     }
 
     default R visitArrayMap(ArrayMap arraySort, C context) {
@@ -1144,6 +1157,14 @@ public interface ScalarFunctionVisitor<R, C> {
         return visitScalarFunction(ipv6StringToNumOrNull, context);
     }
 
+    default R visitIsIpv4Compat(IsIpv4Compat isIpv4Compat, C context) {
+        return visitScalarFunction(isIpv4Compat, context);
+    }
+
+    default R visitIsIpv4Mapped(IsIpv4Mapped isIpv4Mapped, C context) {
+        return visitScalarFunction(isIpv4Mapped, context);
+    }
+
     default R visitIsIpv4String(IsIpv4String isIpv4String, C context) {
         return visitScalarFunction(isIpv4String, context);
     }
@@ -1154,6 +1175,10 @@ public interface ScalarFunctionVisitor<R, C> {
 
     default R visitIsIPAddressInRange(IsIpAddressInRange isIpAddressInRange, C context) {
         return visitScalarFunction(isIpAddressInRange, context);
+    }
+
+    default R visitIpv6CIDRToRange(Ipv6CIDRToRange ipv6CIDRToRange, C context) {
+        return visitScalarFunction(ipv6CIDRToRange, context);
     }
 
     default R visitJsonArray(JsonArray jsonArray, C context) {

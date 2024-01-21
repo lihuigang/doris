@@ -37,6 +37,7 @@ import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayCumSum;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayDifference;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayDistinct;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayEnumerate;
+import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayEnumerateUniq;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayExcept;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayExists;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayFilter;
@@ -59,6 +60,7 @@ import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayRange;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayRemove;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayRepeat;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayReverseSort;
+import org.apache.doris.nereids.trees.expressions.functions.scalar.ArrayShuffle;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArraySlice;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArraySort;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.ArraySortBy;
@@ -195,11 +197,14 @@ import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv4NumToStri
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv4StringToNum;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv4StringToNumOrDefault;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv4StringToNumOrNull;
+import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv6CIDRToRange;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv6NumToString;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv6StringToNum;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv6StringToNumOrDefault;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.Ipv6StringToNumOrNull;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.IsIpAddressInRange;
+import org.apache.doris.nereids.trees.expressions.functions.scalar.IsIpv4Compat;
+import org.apache.doris.nereids.trees.expressions.functions.scalar.IsIpv4Mapped;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.IsIpv4String;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.IsIpv6String;
 import org.apache.doris.nereids.trees.expressions.functions.scalar.JsonArray;
@@ -445,6 +450,7 @@ public class BuiltinScalarFunctions implements FunctionHelper {
             scalar(ArrayDifference.class, "array_difference"),
             scalar(ArrayDistinct.class, "array_distinct"),
             scalar(ArrayEnumerate.class, "array_enumerate"),
+            scalar(ArrayEnumerateUniq.class, "array_enumerate_uniq"),
             scalar(ArrayExcept.class, "array_except"),
             scalar(ArrayExists.class, "array_exists"),
             scalar(ArrayFilter.class, "array_filter"),
@@ -470,6 +476,7 @@ public class BuiltinScalarFunctions implements FunctionHelper {
             scalar(ArraySlice.class, "array_slice"),
             scalar(ArraySort.class, "array_sort"),
             scalar(ArraySortBy.class, "array_sortby"),
+            scalar(ArrayShuffle.class, "array_shuffle", "shuffle"),
             scalar(ArraySum.class, "array_sum"),
             scalar(ArrayUnion.class, "array_union"),
             scalar(ArrayWithConstant.class, "array_with_constant"),
@@ -604,9 +611,12 @@ public class BuiltinScalarFunctions implements FunctionHelper {
             scalar(Ipv6StringToNum.class, "ipv6_string_to_num", "inet6_aton"),
             scalar(Ipv6StringToNumOrDefault.class, "ipv6_string_to_num_or_default"),
             scalar(Ipv6StringToNumOrNull.class, "ipv6_string_to_num_or_null"),
+            scalar(IsIpv4Compat.class, "is_ipv4_compat"),
+            scalar(IsIpv4Mapped.class, "is_ipv4_mapped"),
             scalar(IsIpv4String.class, "is_ipv4_string"),
             scalar(IsIpv6String.class, "is_ipv6_string"),
             scalar(IsIpAddressInRange.class, "is_ip_address_in_range"),
+            scalar(Ipv6CIDRToRange.class, "ipv6_cidr_to_range"),
             scalar(JsonArray.class, "json_array"),
             scalar(JsonObject.class, "json_object"),
             scalar(JsonQuote.class, "json_quote"),

@@ -1021,6 +1021,12 @@ public class Config extends ConfigBase {
     public static boolean disable_balance = false;
 
     /**
+     * when be rebalancer idle, then disk balance will occurs.
+     */
+    @ConfField(mutable = true, masterOnly = true)
+    public static int be_rebalancer_idle_seconds = 60;
+
+    /**
      * if set to true, TabletScheduler will not do disk balance.
      */
     @ConfField(mutable = true, masterOnly = true)
@@ -1559,7 +1565,7 @@ public class Config extends ConfigBase {
             "This parameter controls the time interval for automatic collection jobs to check the health of table"
                     + "statistics and trigger automatic collection"
     })
-    public static int auto_check_statistics_in_minutes = 10;
+    public static int auto_check_statistics_in_minutes = 5;
 
     /**
      * If set to TRUE, the compaction slower replica will be skipped when select get queryable replicas
@@ -1916,13 +1922,6 @@ public class Config extends ConfigBase {
     public static boolean enable_fqdn_mode = false;
 
     /**
-     * This is used whether to push down function to MYSQL in external Table with query sql
-     * like odbc, jdbc for mysql table
-     */
-    @ConfField(mutable = true)
-    public static boolean enable_func_pushdown = true;
-
-    /**
      * If set to true, doris will try to parse the ddl of a hive view and try to execute the query
      * otherwise it will throw an AnalysisException.
      */
@@ -2089,17 +2088,6 @@ public class Config extends ConfigBase {
 
     @ConfField(mutable = true)
     public static boolean disable_datev1  = true;
-
-    /**
-     * Now we not fully support array/struct/map nesting complex type in many situation,
-     * so just disable creating nesting complex data type when create table.
-     * We can make it able after we fully support
-     */
-    @ConfField(mutable = true, masterOnly = true, description = {
-            "当前默认设置为 true，不支持建表时创建复杂类型(array/struct/map)嵌套复杂类型, 仅支持array类型自身嵌套。",
-            "Now default set to true, not support create complex type(array/struct/map) nested complex type "
-                    + "when we create table, only support array type nested array"})
-    public static boolean disable_nested_complex_type  = true;
 
     /*
      * This variable indicates the number of digits by which to increase the scale
@@ -2415,6 +2403,14 @@ public class Config extends ConfigBase {
     })
     public static int http_load_submitter_max_worker_threads = 2;
 
+    @ConfField(mutable = true, masterOnly = true, description = {
+            "load label个数阈值，超过该个数后，对于已经完成导入作业或者任务，其label会被删除，被删除的 label 可以被重用。",
+            "The threshold of load labels' number. After this number is exceeded, "
+                    + "the labels of the completed import jobs or tasks will be deleted, "
+                    + "and the deleted labels can be reused."
+    })
+    public static int label_num_threshold = 2000;
+
     //==========================================================================
     //                    begin of cloud config
     //==========================================================================
@@ -2424,6 +2420,10 @@ public class Config extends ConfigBase {
 
     public static boolean isCloudMode() {
         return !cloud_unique_id.isEmpty();
+    }
+
+    public static boolean isNotCloudMode() {
+        return cloud_unique_id.isEmpty();
     }
 
     /**
@@ -2438,6 +2438,9 @@ public class Config extends ConfigBase {
     @ConfField(mutable = true)
     public static int meta_service_connection_pool_size = 20;
 
+    @ConfField(mutable = true)
+    public static int meta_service_rpc_retry_times = 200;
+
     // A connection will expire after a random time during [base, 2*base), so that the FE
     // has a chance to connect to a new RS. Set zero to disable it.
     @ConfField(mutable = true)
@@ -2448,6 +2451,9 @@ public class Config extends ConfigBase {
 
     @ConfField(mutable = true)
     public static int sts_duration = 3600;
+
+    @ConfField(mutable = true)
+    public static int drop_rpc_retry_num = 200;
 
     @ConfField
     public static int cloud_meta_service_rpc_failed_retry_times = 200;
